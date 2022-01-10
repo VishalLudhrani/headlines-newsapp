@@ -1,6 +1,7 @@
 import './App.css';
 import { createTheme } from '@mui/material';
 import Navbar from './components/Navbar';
+import Hero from './components/Hero';
 
 document.title = "Headlines - News on the go."
 
@@ -20,7 +21,7 @@ function App() {
   return (
     <div className="App">
       <Navbar />
-      <h1>Project under development.</h1>
+      <Hero />
     </div>
   );
 }
