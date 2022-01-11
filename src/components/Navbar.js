@@ -64,7 +64,7 @@ export default function Navbar(props) {
           ) : (
             <Button
               onClick={props.loginFunc}
-              sx={{color:"white"}}
+              color="inherit"
             >
               Login
             </Button>
