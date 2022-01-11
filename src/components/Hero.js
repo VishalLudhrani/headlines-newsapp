@@ -7,7 +7,7 @@ const Hero = () => {
     <Grid container spacing={2} alignItems="center" padding="2em">
       <Grid item md={6} align="left">
         <Box container>
-          <Typography variant="h2" align="left">
+          <Typography variant="h3" align="left">
             A news app which helps busy professionals keep updated with just headlines.
           </Typography>
           <br />
@@ -16,8 +16,9 @@ const Hero = () => {
             disableRipple
             variant="contained"
             size="large"
+            sx={{borderRadius: "8px"}}
           >
-            Get started
+            Sign me up!
           </Button>
         </Box>
       </Grid>
