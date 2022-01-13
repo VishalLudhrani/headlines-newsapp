@@ -4,6 +4,8 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "firebase/auth";
 import { initializeApp } from "firebase/app";
+import theme from './theme/theme';
+import { ThemeProvider } from '@mui/material';
 
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -12,13 +14,14 @@ import { initializeApp } from "firebase/app";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyC8vXiNkdms5HGkUsS7g9gHMbQlawlGwbc",
-  authDomain: "headlines-newsapp.firebaseapp.com",
-  projectId: "headlines-newsapp",
-  storageBucket: "headlines-newsapp.appspot.com",
-  messagingSenderId: "782103017224",
-  appId: "1:782103017224:web:9a450a788ce406106b9ebd",
-  measurementId: "G-6W41W18LYT"
+  apiKey: process.env.REACT_APP_APIKEY,
+  authDomain: process.env.REACT_APP_AUTHDOMAIN,
+  projectId: process.env.REACT_APP_PROJECTID,
+  databaseURL: process.env.REACT_APP_DATABASEURL,
+  storageBucket: process.env.REACT_APP_STORAGEBUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGINGSENDERID,
+  appId: process.env.REACT_APP_APPID,
+  measurementId: process.env.REACT_APP_MEASUREMENTID
 };
 
 // Initialize Firebase
@@ -42,14 +45,16 @@ class App extends React.Component {
       } else {
         console.log("Logged out.");
       }
-    })
+    });
   }
 
   render() {
     return (
       <div className="App">
-        <Navbar user={this.state.user} loginFunc={this.login} logoutFunc={this.logout} />
-        <Hero />
+        <ThemeProvider theme={theme}>
+          <Navbar user={this.state.user} loginFunc={this.login} logoutFunc={this.logout} />
+          <Hero />
+        </ThemeProvider>
       </div>
     );
   }
@@ -58,8 +63,8 @@ class App extends React.Component {
     signInWithPopup(auth, provider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
+        // const credential = GoogleAuthProvider.credentialFromResult(result);
+        // const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
         this.setState({user: user});
@@ -68,10 +73,11 @@ class App extends React.Component {
         // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
+        alert(`Error ${errorCode}\n${errorMessage}`);
         // The email of the user's account used.
-        const email = error.email;
+        // const email = error.email;
         // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
+        // const credential = GoogleAuthProvider.credentialFromError(error);
         // ...
       });
   }

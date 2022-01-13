@@ -23,6 +23,15 @@ const theme = createTheme({
       paper: '#FFFFFF',
       default: '#F6F4F4'
     }
+  },
+  shape: {
+    borderRadius: 12
+  },
+  typography: {
+    button: {
+      textTransform: "none",
+      fontWeight: 700
+    }
   }
 });
 
