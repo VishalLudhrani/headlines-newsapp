@@ -1,11 +1,14 @@
 import React from 'react';
 import './App.css';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
+import Home from './Home';
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "firebase/auth";
 import { initializeApp } from "firebase/app";
-import theme from './theme/theme';
+import { getDatabase, onValue, ref } from "firebase/database";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Preferences from './components/Preferences';
 import { ThemeProvider } from '@mui/material';
+import theme from './theme/theme';
+import Navbar from './components/Navbar';
 
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -28,20 +31,45 @@ const firebaseConfig = {
 initializeApp(firebaseConfig);
 
 const provider = new GoogleAuthProvider();
+const database = getDatabase();
 
 document.title = "Headlines - News on the go."
 const auth = getAuth();
 
+const categories = [
+  "business",
+  "entertainment",
+  "general",
+  "health",
+  "science",
+  "sports",
+  "technology"
+]
+
 class App extends React.Component {
   
   state = {
-    user: null
+    user: null,
+    userPref: {
+      "business": false,
+      "entertainment": false,
+      "general": false,
+      "health": false,
+      "science": false,
+      "sports": false,
+      "technology": false
+    }
   }
   
   componentDidMount() {
     onAuthStateChanged(auth, (user) => {
       if(user) {
         this.setState({user: user});
+        onValue(ref(database, `users/${user.uid}`), (snapshot) => {
+          // if(snapshot.exists()) {
+          //   this.props.history.push('/preferences')
+          // }
+        })
       } else {
         console.log("Logged out.");
       }
@@ -50,12 +78,15 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="App">
-        <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
           <Navbar user={this.state.user} loginFunc={this.login} logoutFunc={this.logout} />
-          <Hero />
-        </ThemeProvider>
-      </div>
+          <Routes>
+            <Route exact path="/" element={<Home />} />
+            <Route path="/preferences" element={<Preferences categories={categories} handleChipClick={this.handleChipClick} userPref={this.state.userPref} />} />
+          </Routes>
+        </BrowserRouter>
+      </ThemeProvider>
     );
   }
 
@@ -90,6 +121,12 @@ class App extends React.Component {
       // An error happened.
       alert(`An error occurred!\n${error.errorCode}: ${error.errorMessage}`);
     });
+  }
+
+  handleChipClick = (category) => {
+    let tempCategory = new Object(this.state.userPref);
+    tempCategory[category] = !tempCategory[category];
+    this.setState({userPref: tempCategory});
   }
 
 }

@@ -7,6 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import { Avatar, Button } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 export default function Navbar(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -57,7 +58,9 @@ export default function Navbar(props) {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>My Preferences</MenuItem>
+                <Link to="/preferences" style={{textDecoration: "none", color: "inherit"}}>
+                  <MenuItem onClick={handleClose}>My Preferences</MenuItem>
+                </Link>
                 <MenuItem onClick={handleSignOut}>Logout</MenuItem>
               </Menu>
             </div>
