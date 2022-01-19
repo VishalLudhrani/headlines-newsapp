@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
-import Home from './Home';
+import Home from './components/Home';
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "firebase/auth";
 import { initializeApp } from "firebase/app";
-import { getDatabase, onValue, ref } from "firebase/database";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { getDatabase, onValue, ref, set, update } from "firebase/database";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Preferences from './components/Preferences';
 import { ThemeProvider } from '@mui/material';
 import theme from './theme/theme';
@@ -44,53 +44,43 @@ const categories = [
   "science",
   "sports",
   "technology"
-]
+];
 
-class App extends React.Component {
+
+const App = () => {
   
-  state = {
-    user: null,
-    userPref: {
-      "business": false,
-      "entertainment": false,
-      "general": false,
-      "health": false,
-      "science": false,
-      "sports": false,
-      "technology": false
-    }
-  }
-  
-  componentDidMount() {
+  let navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [userPref, setUserPref] = useState({
+    "business": false,
+    "entertainment": false,
+    "general": false,
+    "health": false,
+    "science": false,
+    "sports": false,
+    "technology": false
+  });
+
+  useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if(user) {
-        this.setState({user: user});
+        setUser(user);
         onValue(ref(database, `users/${user.uid}`), (snapshot) => {
-          // if(snapshot.exists()) {
-          //   this.props.history.push('/preferences')
-          // }
+          if(snapshot.exists()) {
+            if(snapshot.val().hasOwnProperty("userPref")) {
+              setUserPref(snapshot.val().userPref);
+            }
+          } else {
+            storeUser(user);
+          }
         })
       } else {
-        console.log("Logged out.");
+        console.log("Logged out");
       }
     });
-  }
-
-  render() {
-    return (
-      <ThemeProvider theme={theme}>
-        <BrowserRouter>
-          <Navbar user={this.state.user} loginFunc={this.login} logoutFunc={this.logout} />
-          <Routes>
-            <Route exact path="/" element={<Home />} />
-            <Route path="/preferences" element={<Preferences categories={categories} handleChipClick={this.handleChipClick} userPref={this.state.userPref} />} />
-          </Routes>
-        </BrowserRouter>
-      </ThemeProvider>
-    );
-  }
-
-  login = () => {
+  }, []);
+  
+  const login = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
@@ -98,7 +88,7 @@ class App extends React.Component {
         // const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
-        this.setState({user: user});
+        setUser({user});
         // ...
       }).catch((error) => {
         // Handle Errors here.
@@ -112,8 +102,8 @@ class App extends React.Component {
         // ...
       });
   }
-
-  logout = () => {
+  
+  const logout = () => {
     signOut(auth).then(() => {
       // Sign-out successful.
       alert("You signed out.");
@@ -122,12 +112,39 @@ class App extends React.Component {
       alert(`An error occurred!\n${error.errorCode}: ${error.errorMessage}`);
     });
   }
-
-  handleChipClick = (category) => {
-    let tempCategory = new Object(this.state.userPref);
+  
+  const handleChipClick = (category) => {
+    let tempCategory = {...userPref};
     tempCategory[category] = !tempCategory[category];
-    this.setState({userPref: tempCategory});
+    setUserPref(tempCategory);
   }
+  
+  const storeUser = (user) => {
+    set(ref(database, '/users/' + user.uid), {
+      name: user.displayName,
+      email: user.email
+    }).then(() => {
+      navigate('/preferences'); 
+    }).catch((err) => {
+      console.log(err);
+      alert(`An error occurred: ${err.errorCode}\n${err.errorMessage}`);
+    })
+  }
+  
+  const storeUserPref = () => {
+    let currentUserId = user.uid;
+    update(ref(database, '/users/' + currentUserId + '/userPref'), userPref); // add promise: then => redirect to feed
+  }
+
+  return (
+    <ThemeProvider theme={theme}>
+      <Navbar user={user} loginFunc={login} logoutFunc={logout} />
+      <Routes>
+        <Route exact path="/" element={<Home signUpFunc={login} />} />
+        <Route path="/preferences" element={<Preferences categories={categories} handleChipClick={handleChipClick} userPref={userPref} storeUserPref={storeUserPref} />} />
+      </Routes>
+    </ThemeProvider>
+  );
 
 }
 

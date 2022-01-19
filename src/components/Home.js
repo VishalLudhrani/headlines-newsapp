@@ -1,10 +1,10 @@
 import React from "react";
-import Hero from "./components/Hero";
+import Hero from "./Hero";
 
-const Home = () => {
+const Home = (props) => {
   return(
     <div className="App">
-      <Hero />
+      <Hero signUpFunc={props.signUpFunc} />
     </div>
   )
 }

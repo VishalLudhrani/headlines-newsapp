@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Button, Grid, Typography } from "@mui/material";
 import { Box } from '@mui/system';
 
-const Hero = () => {
+const Hero = (props) => {
   return(
     <Grid container spacing={2} alignItems="center" padding="2em">
       <Grid item md={6} align="left">
@@ -16,6 +16,7 @@ const Hero = () => {
             disableRipple
             variant="contained"
             size="large"
+            onClick={props.signUpFunc}
           >
             Sign me up!
           </Button>
