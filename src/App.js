@@ -9,6 +9,7 @@ import Preferences from './components/Preferences';
 import { ThemeProvider } from '@mui/material';
 import theme from './theme/theme';
 import Navbar from './components/Navbar';
+import Feed from './components/Feed/Feed';
 
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -69,6 +70,8 @@ const App = () => {
           if(snapshot.exists()) {
             if(snapshot.val().hasOwnProperty("userPref")) {
               setUserPref(snapshot.val().userPref);
+            } else {
+              navigate('/preferences');
             }
           } else {
             storeUser(user);
@@ -133,7 +136,12 @@ const App = () => {
   
   const storeUserPref = () => {
     let currentUserId = user.uid;
-    update(ref(database, '/users/' + currentUserId + '/userPref'), userPref); // add promise: then => redirect to feed
+    update(ref(database, '/users/' + currentUserId + '/userPref'), userPref).then(() => {
+      navigate('/feed');
+    }).catch((err) => {
+      console.log(err);
+      alert(`An error occurred while capturing your preferences: ${err.errorCode}\n${err.errorMessage}`);
+    }); // add promise: then => redirect to feed
   }
 
   return (
@@ -142,6 +150,7 @@ const App = () => {
       <Routes>
         <Route exact path="/" element={<Home signUpFunc={login} />} />
         <Route path="/preferences" element={<Preferences categories={categories} handleChipClick={handleChipClick} userPref={userPref} storeUserPref={storeUserPref} />} />
+        <Route path="/feed" element={<Feed categories={userPref} />} />
       </Routes>
     </ThemeProvider>
   );

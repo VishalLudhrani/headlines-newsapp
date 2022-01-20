@@ -8,8 +8,10 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import { Avatar, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 export default function Navbar(props) {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleMenu = (event) => {
@@ -24,11 +26,15 @@ export default function Navbar(props) {
     props.logoutFunc();
   };
 
+  const redirectHome = () => {
+    navigate('/');
+  }
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} onClick={redirectHome} style={{cursor: 'pointer'}}>
             Headlines - News on the go
           </Typography>
           {(props.user != null) ? (
