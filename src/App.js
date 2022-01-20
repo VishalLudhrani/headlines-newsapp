@@ -78,7 +78,7 @@ const App = () => {
           }
         })
       } else {
-        console.log("Logged out");
+        navigate('/');
       }
     });
   }, []);
@@ -109,7 +109,7 @@ const App = () => {
   const logout = () => {
     signOut(auth).then(() => {
       // Sign-out successful.
-      alert("You signed out.");
+      alert("Signed out successfully.");
     }).catch((error) => {
       // An error happened.
       alert(`An error occurred!\n${error.errorCode}: ${error.errorMessage}`);
@@ -129,7 +129,6 @@ const App = () => {
     }).then(() => {
       navigate('/preferences'); 
     }).catch((err) => {
-      console.log(err);
       alert(`An error occurred: ${err.errorCode}\n${err.errorMessage}`);
     })
   }
@@ -139,7 +138,6 @@ const App = () => {
     update(ref(database, '/users/' + currentUserId + '/userPref'), userPref).then(() => {
       navigate('/feed');
     }).catch((err) => {
-      console.log(err);
       alert(`An error occurred while capturing your preferences: ${err.errorCode}\n${err.errorMessage}`);
     }); // add promise: then => redirect to feed
   }

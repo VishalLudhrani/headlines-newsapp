@@ -31,10 +31,9 @@ const Feed = (props) => {
   const getNews = () => {
     randomizeCategory(categories);
     axios.get(`${BASE_URL}/top-headlines/category/${currentCategory}/in.json`).then((res) => {
-      console.log(res.data.articles);
       randomizeNews(res.data.articles);
     }).catch((err) => {
-      console.error(err);
+      alert(`An error occurred while fetching some news: ${err.errorCode}\n${err.errorMessage}`);
     });
   }
 
