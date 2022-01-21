@@ -1,31 +1,44 @@
 import * as React from 'react';
-import { Button, Grid, Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
+import { withStyles } from '@mui/styles';
 import { Box } from '@mui/system';
 
 const Hero = (props) => {
+
+  const CustomColor = withStyles({
+    root: {
+      background: "-webkit-linear-gradient(45deg, #7D83FF 30%, #00E0B7 90%)",
+      WebkitBackgroundClip: "text",
+      WebkitTextFillColor: "transparent"
+    }
+  })(Typography);
+
   return(
-    <Grid container spacing={2} alignItems="center" padding="2em">
-      <Grid item md={6} align="left">
-        <Box container>
-          <Typography variant="h4" align="left">
-            A news app which keeps busy professionals updated with just headlines.
-          </Typography>
-          <br />
-          <Button 
-            color="primary" 
-            disableRipple
-            variant="contained"
-            size="large"
-            onClick={props.signUpFunc}
+    <Box container margin={2}>
+      <Box margin="192px auto">
+        <CustomColor 
+          variant="h2"
+          sx={{fontWeight: "800"}}
           >
-            Sign me up!
-          </Button>
-        </Box>
-      </Grid>
-      <Grid item md={6}>
-        <img src="./hero-img.svg" width="100%" height="auto" alt="A woman reading newspaper at a park." />
-      </Grid>
-    </Grid>
+          No articles, only headlines
+        </CustomColor>
+        <br />
+        <Typography variant="h6">
+          A simple news web app which helps busy professionals keep updated with news by reading just headlines. 
+          <br />
+          No articles, no temptation to read further, no time wasted.
+        </Typography>
+        <br />
+        <Button
+          variant="contained"
+          size="large"
+          sx={{height: "48px"}}
+          onClick={props.signUpFunc}
+        >
+          Sign me up!
+        </Button>
+      </Box>
+    </Box>
   );
 }
 

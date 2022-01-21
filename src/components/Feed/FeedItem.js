@@ -11,7 +11,7 @@ const FeedItem = (props) => {
         open={true}
       >
         <CircularProgress color="inherit" />
-        <Typography variant='h4'>
+        <Typography variant="h5">
           Fetching some news, please wait.
         </Typography>
       </Backdrop>
@@ -24,7 +24,7 @@ const FeedItem = (props) => {
           image={props.currentNews.urlToImage}
         />
         <CardContent>
-          <Typography gutterBottom variant="h4" component="div">
+          <Typography gutterBottom variant="h5" component="div">
             {props.currentNews.title}
           </Typography>
           <Typography variant="body1" color="text.secondary">

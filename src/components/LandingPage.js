@@ -1,7 +1,7 @@
 import React from "react";
 import Hero from "./Hero";
 
-const Home = (props) => {
+const LandingPage = (props) => {
   return(
     <div className="App">
       <Hero signUpFunc={props.signUpFunc} />
@@ -9,4 +9,4 @@ const Home = (props) => {
   )
 }
 
-export default Home;
+export default LandingPage;

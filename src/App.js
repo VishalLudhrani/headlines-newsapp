@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import Home from './components/Home';
+import LandingPage from './components/LandingPage';
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { getDatabase, onValue, ref, set, update } from "firebase/database";
@@ -178,7 +178,7 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <Navbar user={user} loginFunc={login} logoutFunc={logout} />
       <Routes>
-        <Route exact path="/" element={<Home signUpFunc={login} />} />
+        <Route exact path="/" element={<LandingPage signUpFunc={login} />} />
         <Route path="/preferences" element={<Preferences categories={categories} handleChipClick={handleChipClick} userPref={userPref} storeUserPref={storeUserPref} />} />
         <Route path="/feed" element={<Feed categories={userPref} />} />
       </Routes>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import FeedItem from './FeedItem';
 import axios from 'axios';
+import { Box } from '@mui/material';
 
 const Feed = (props) => {
 
@@ -42,9 +43,12 @@ const Feed = (props) => {
   }, []);
 
   return(
-    <div>
+    <Box 
+      container
+      m={4}
+      >
       <FeedItem getNews={getNews} currentNews={currentNews} currentCategory={currentCategory} />
-    </div>
+    </Box>
   )
 }
 
