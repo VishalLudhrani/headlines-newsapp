@@ -2,6 +2,14 @@
 
 A news app which helps busy professionals keep updated with just headlines.
 
+## Tech stack
+- Problem statement inspiration: [UXChallenge](https://www.uxchallenge.co/)
+- [ReactJS](https://reactjs.org) as the Front End framework
+- [MaterialUI](https://mui.com) as the UI library
+- [Axios](https://axios-http.com) as the HTTP request API
+- [Firebase](https://firebase.google.com) for realtime database and authentication
+- [SauravKanchan](https://github.com/SauravKanchan/NewsAPI)'s alternative to [NewsAPI](https://newsapi.org/)
+
 ## The problem
 
 The news apps that provide news briefs consume huge amount of mobile data when you’re travelling to work, or travelling in general.
