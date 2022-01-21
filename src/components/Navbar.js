@@ -23,6 +23,7 @@ export default function Navbar(props) {
   };
 
   const handleSignOut = () => {
+    handleClose();
     props.logoutFunc();
   };
 

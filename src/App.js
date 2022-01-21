@@ -6,7 +6,8 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, onValue, ref, set, update } from "firebase/database";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Preferences from './components/Preferences';
-import { ThemeProvider } from '@mui/material';
+import { Button, IconButton, Snackbar, ThemeProvider } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import theme from './theme/theme';
 import Navbar from './components/Navbar';
 import Feed from './components/Feed/Feed';
@@ -61,20 +62,22 @@ const App = () => {
     "sports": false,
     "technology": false
   });
+  const [open, setOpen] = useState(true);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if(user) {
-        setUser(user);
-        onValue(ref(database, `users/${user.uid}`), (snapshot) => {
+    onAuthStateChanged(auth, (userResult) => {
+      if(userResult) {
+        setUser(userResult);
+        onValue(ref(database, `users/${userResult.uid}`), (snapshot) => {
           if(snapshot.exists()) {
             if(snapshot.val().hasOwnProperty("userPref")) {
               setUserPref(snapshot.val().userPref);
+              navigate('/feed');
             } else {
               navigate('/preferences');
             }
           } else {
-            storeUser(user);
+            storeUser(userResult);
           }
         })
       } else {
@@ -82,6 +85,31 @@ const App = () => {
       }
     });
   }, []);
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  }
+
+  const action = (
+    <React.Fragment>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        <a style={{color: '#8D99C4'}} href="https://github.com/VishalLudhrani/headlines-newsapp" target="_blank">
+          View on GitHub
+        </a>
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
   
   const login = () => {
     signInWithPopup(auth, provider)
@@ -90,8 +118,8 @@ const App = () => {
         // const credential = GoogleAuthProvider.credentialFromResult(result);
         // const token = credential.accessToken;
         // The signed-in user info.
-        const user = result.user;
-        setUser({user});
+        const resultUser = result.user;
+        setUser(resultUser);
         // ...
       }).catch((error) => {
         // Handle Errors here.
@@ -127,19 +155,23 @@ const App = () => {
       name: user.displayName,
       email: user.email
     }).then(() => {
-      navigate('/preferences'); 
+      // do good stuff
     }).catch((err) => {
       alert(`An error occurred: ${err.errorCode}\n${err.errorMessage}`);
-    })
+    });
   }
   
   const storeUserPref = () => {
     let currentUserId = user.uid;
-    update(ref(database, '/users/' + currentUserId + '/userPref'), userPref).then(() => {
-      navigate('/feed');
-    }).catch((err) => {
-      alert(`An error occurred while capturing your preferences: ${err.errorCode}\n${err.errorMessage}`);
-    }); // add promise: then => redirect to feed
+    if(currentUserId !== undefined) {
+      update(ref(database, '/users/' + currentUserId + '/userPref'), userPref).then(() => {
+        alert("Preferences saved!");
+      }).catch((err) => {
+        alert(`An error occurred while capturing your preferences: ${err.errorCode}\n${err.errorMessage}`);
+      }); // add promise: then => redirect to feed
+    } else {
+      alert("Something went wrong.\nSorry for the terrible experience, kindly reload the webpage and try again.");
+    }
   }
 
   return (
@@ -150,6 +182,13 @@ const App = () => {
         <Route path="/preferences" element={<Preferences categories={categories} handleChipClick={handleChipClick} userPref={userPref} storeUserPref={storeUserPref} />} />
         <Route path="/feed" element={<Feed categories={userPref} />} />
       </Routes>
+      <Snackbar
+        open={open}
+        onClose={handleClose}
+        message="View this project on GitHub"
+        action={action}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      />
     </ThemeProvider>
   );
 
