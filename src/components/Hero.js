@@ -15,9 +15,9 @@ const Hero = (props) => {
 
   return(
     <Box container margin={2}>
-      <Box margin="192px auto">
+      <Box margin={props.heroBoxMargin}>
         <CustomColor 
-          variant="h2"
+          variant={props.headingVariant}
           sx={{fontWeight: "800"}}
           >
           No articles, only headlines

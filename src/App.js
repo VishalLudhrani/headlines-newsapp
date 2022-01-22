@@ -34,8 +34,6 @@ initializeApp(firebaseConfig);
 
 const provider = new GoogleAuthProvider();
 const database = getDatabase();
-
-document.title = "Headlines - News on the go."
 const auth = getAuth();
 
 const categories = [
@@ -47,6 +45,9 @@ const categories = [
   "sports",
   "technology"
 ];
+
+let boxMargin = "";
+let headingVariant = "";
 
 
 const App = () => {
@@ -84,6 +85,8 @@ const App = () => {
         navigate('/');
       }
     });
+    boxMargin = (window.innerWidth < 576) ? "3rem auto": "10rem auto";
+    headingVariant = (window.innerWidth < 576) ? "h3" : "h2";
   }, []);
 
   const handleClose = (event, reason) => {
@@ -178,7 +181,7 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <Navbar user={user} loginFunc={login} logoutFunc={logout} />
       <Routes>
-        <Route exact path="/" element={<LandingPage signUpFunc={login} />} />
+        <Route exact path="/" element={<LandingPage signUpFunc={login} heroBoxMargin={boxMargin} headingVariant={headingVariant} />} />
         <Route path="/preferences" element={<Preferences categories={categories} handleChipClick={handleChipClick} userPref={userPref} storeUserPref={storeUserPref} />} />
         <Route path="/feed" element={<Feed categories={userPref} />} />
       </Routes>
