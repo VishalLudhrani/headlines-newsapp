@@ -1,16 +1,20 @@
+// library imports
 import React, { useEffect, useState } from 'react';
-import './App.css';
-import LandingPage from './components/LandingPage';
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { getDatabase, onValue, ref, set, update } from "firebase/database";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import Preferences from './components/Preferences';
 import { Button, IconButton, Snackbar, ThemeProvider } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+
+// custom imports
+import './App.css';
+import LandingPage from './components/LandingPage';
+import Preferences from './components/Preferences';
 import theme from './theme/theme';
 import Navbar from './components/Navbar';
 import Feed from './components/Feed/Feed';
+import GuestFeed from './components/GuestFeed';
 
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -46,10 +50,6 @@ const categories = [
   "technology"
 ];
 
-let boxMargin = "";
-let headingVariant = "";
-
-
 const App = () => {
   
   let navigate = useNavigate();
@@ -64,6 +64,8 @@ const App = () => {
     "technology": false
   });
   const [open, setOpen] = useState(true);
+  const [boxMargin, setBoxMargin] = useState("");
+  const [headingVariant, setHeadingVariant] = useState("");
 
   useEffect(() => {
     onAuthStateChanged(auth, (userResult) => {
@@ -81,13 +83,11 @@ const App = () => {
             storeUser(userResult);
           }
         })
-      } else {
-        navigate('/');
       }
     });
-    boxMargin = (window.innerWidth < 576) ? "3rem auto": "10rem auto";
-    headingVariant = (window.innerWidth < 576) ? "h3" : "h2";
-  }, []);
+    setBoxMargin((window.innerWidth < 576) ? "3rem auto": "10rem auto");
+    setHeadingVariant((window.innerWidth < 576) ? "h3" : "h2");
+  }, [boxMargin, headingVariant]);
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -141,6 +141,7 @@ const App = () => {
     signOut(auth).then(() => {
       // Sign-out successful.
       alert("Signed out successfully.");
+      navigate("/");
     }).catch((error) => {
       // An error happened.
       alert(`An error occurred!\n${error.errorCode}: ${error.errorMessage}`);
@@ -184,6 +185,7 @@ const App = () => {
         <Route exact path="/" element={<LandingPage signUpFunc={login} heroBoxMargin={boxMargin} headingVariant={headingVariant} />} />
         <Route path="/preferences" element={<Preferences categories={categories} handleChipClick={handleChipClick} userPref={userPref} storeUserPref={storeUserPref} />} />
         <Route path="/feed" element={<Feed categories={userPref} />} />
+        <Route path="/guest" element={<GuestFeed />} />
       </Routes>
       <Snackbar
         open={open}

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Button, Typography } from "@mui/material";
 import { withStyles } from '@mui/styles';
 import { Box } from '@mui/system';
+import { useNavigate } from 'react-router';
 
 const Hero = (props) => {
 
@@ -12,6 +13,8 @@ const Hero = (props) => {
       WebkitTextFillColor: "transparent"
     }
   })(Typography);
+
+  const navigate = useNavigate();
 
   return(
     <Box container margin={2}>
@@ -36,6 +39,16 @@ const Hero = (props) => {
           onClick={props.signUpFunc}
         >
           Sign me up!
+        </Button>
+        <br />
+        <br />
+        <Button
+          variant="outlined"
+          size="large"
+          sx={{height: "48px"}}
+          onClick={() => {navigate("/guest")}}
+        >
+          Browse headlines
         </Button>
       </Box>
     </Box>

@@ -31,9 +31,13 @@ const FeedItem = (props) => {
             Category: {props.currentCategory}
           </Typography>
         </CardContent>
-        <CardActions sx={{display: 'flex'}} >
-          <Button size="large" sx={{flex: 'auto'}} onClick={props.getNews}>Next headline</Button>
-      </CardActions>
+        {
+          props.isLoggedIn && (
+            <CardActions sx={{display: 'flex'}} >
+              <Button size="large" sx={{flex: 'auto'}} onClick={props.getNews}>Next headline</Button>
+            </CardActions>
+          )
+        }
       </Card>
       )}
     </div>

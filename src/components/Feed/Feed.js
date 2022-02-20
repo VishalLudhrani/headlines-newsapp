@@ -47,7 +47,7 @@ const Feed = (props) => {
       container
       m={4}
       >
-      <FeedItem getNews={getNews} currentNews={currentNews} currentCategory={currentCategory} />
+      <FeedItem getNews={getNews} currentNews={currentNews} currentCategory={currentCategory} isLoggedIn={true} />
     </Box>
   )
 }
